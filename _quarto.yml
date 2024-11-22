@@ -3,8 +3,8 @@ project:
 
 book:
   title: "Mappeeksamen IDR4000"
-  author: "Student Studentson"
-  date: "2024-09-10"
+  author: "508"
+  date: "2024-11-22"
   chapters:
     - index.qmd
     - 01-reliabilitet.qmd
@@ -16,7 +16,7 @@ book:
     - 07-laboratory-report.qmd
     - references.qmd
 
-bibliography: resources/bib-final.bib
+bibliography: idr-4000-referanser.bib
 
 format: pdf
 

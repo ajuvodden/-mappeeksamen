@@ -1,13 +1,21 @@
-# Introduksjon {.unnumbered}
+# Forord {.unnumbered}
 
-Ny rad
+Dette er mappeeksamen i IDR4000.
+
+Hver del er produsert av meg eller som gruppearbeid i undervisningssammenheng.
+
+Link til repository på github: https://github.com/ajuvodden/-mappeeksamen.git
+
 
 Mappeeksamen består av følgende deler: 
 
-- Rapport: "Deskriptiv statistikk, reliabilitet og validitet og verktøy for reproduserbar vitenskap".
-- Laborasjonsrapport fra molekylærlabb
-- Arbeidskrav i vitenskapsteori
+- Rapport: "Reliabilitet"
+- Rapport: "Regresjonsmodeller"
 - Rapport: "Statistisk inferens, statistiske modeller og statistisk styrke"
 - Rapport: "Studiedesign"
 - Rapport: "Analyse av eksperimenter med repeterte målinger"
+- Arbeidskrav i vitenskapsteori
+- Labrapport fra molekylærlabb
+
+
 

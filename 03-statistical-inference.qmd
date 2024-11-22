@@ -1,10 +1,24 @@
-# Assignment 3: Drawing inference from statistical models, and statistical power {#assignment3}
+---
+title: "Statistical inference"
+author: "Andrine Juvodden"
+date: "Dato"
+format:
+  html:
+    citation-style: resources/apa.csl.txt
+    code-fold: true
+bibliography: resources/idr-4000-referanser.bib
+output: html_document
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: false
+  warning: false
+  message: false
+---
 
+## Oppgave 1
 
-
-# Task 1
-
-```{r}
+```{r, results='hide'}
 
 library(tidyverse)
 
@@ -25,55 +39,53 @@ summary(m2)
 
 ```
 
-Estimates: The estimate in the regression models m1 and m2 represents the average of the observed values in the samples. In this case, it estimates the difference between the two treatments in a crossover study.
+#### Estimater
 
-For m1 (sample size of 8), the regression model gives an estimate of 1.840. This means that the average difference between treatments in this example is approximately 1.84.
+Estimatene i regresjonsmodellene m1 og m2 representerer gjennomsnittene for hver gruppe. Her estimerer vi populasjonsgjennomsnittet basert på to forskjellige utvalgsstørrelser. Nøkkelen er at estimatet i begge modellene er gjennomsnittet av observerte verdier i utvalget. For m1 (utvalgsstørrelse 8) er estimert gjennomsnitt 1.840, noe som er litt annerledes enn det sanne populasjonsgjennomsnittet på 1.5. Utvalgsgjennomsnittet er en tilnærming av populasjonsgjennomsnittet, og nøyaktigheten avhenger av utvalgsstørrelsen. For m2 (utvalgsstørrelse 40) er estimert gjennomsnitt 1.5642, som er mye nærmere populasjonsgjennomsnittet på 1.5. Større utvalg reduserer vanligvis variasjonen i estimatet og gir en mer pålitelig tilnærming av populasjonsgjennomsnittet.
 
-For m2 (sample size of 40), the estimate is 1.5642, which is even closer to the true population mean of 1.5. With a larger sample size, we get a more accurate estimate of the population mean because of reduced variability.
+The estimates in the regression models `m1` and `m2` represent the sample means for each group. In this context, we're estimating the mean of a population based on two different sample sizes. The key point is that the estimate in both models is the average of the observed values in the sample.
 
-Standard error:
+For `m1` (sample size of 8), the estimated mean is 1.840, which is slightly different from the true population mean of 1.5. The sample mean is an approximation of the population mean, and the accuracy depends on sample size.
 
-The standard error (SE) is a measure of the uncertainty in the estimate. It shows how much we can expect the mean from a new random sample to vary from the one we have drawn.
+For `m2` (sample size of 40), the estimated mean is 1.5642, which is much closer to the population mean of 1.5. Larger sample sizes typically reduce the variability in the estimate, making it a more reliable approximation of the population mean.
 
-For m1, the SE is 1.251. A higher SE indicates more uncertainty around the estimate due to the small sample size.
+#### Standardfeil
 
-For m2, the SE is 0.4774, which is much smaller than m1. This is because a larger sample size reduces the variability in the estimate of the population mean, leading to a more precise estimate.
+Standardfeilen (SE) er et mål på usikkerheten i estimatet. Den viser hvor mye gjennomsnittet fra et nytt tilfeldig utvalg forventes å avvike fra det vi har. For m1 er SE 1.251. En høy SE indikerer mer usikkerhet rundt estimatet på grunn av liten utvalgsstørrelse. For m2 er SE 0.4774, som er betydelig mindre enn for m1. Dette skyldes at et større utvalg reduserer variasjonen i estimatet, noe som gir et mer presist resultat.
 
-T-value:
+#### T-verdi og P-verdi
 
-For m1, the t-value is 1.47. This is calculated as the estimate divided by the SE, indicating how far the sample mean is from 0 in terms of SEs.
+For m1 er t-verdien 1.47, beregnet som estimatet delt på SE. Dette indikerer hvor langt utvalgsgjennomsnittet er fra 0 målt i standardfeil.
 
-For m2, the t-value is 3.276, which is larger due to the smaller SE and more precise estimate in the larger sample. The larger t-value indicates stronger evidence that the mean is significantly different from 0.
+For m2 er t-verdien 3.276, som er større på grunn av lavere SE og er et mer presist estimat i det større utvalget. En høyere t-verdi indikerer sterkere bevis for at gjennomsnittet er signifikant forskjellig fra 0.
 
-P-value:
+For m1 er p-verdien 0.185, som betyr at det er 18.5 % sjanse for å observere en t-verdi så ekstrem som 1.47 hvis nullhypotesen (gjennomsnitt = 0) er sann. Siden dette er over den vanlige terskelen på 0.05, forkaster vi ikke nullhypotesen.
 
-For m1, the p-value is 0.185, meaning that there is an 18.5% chance of observing a t-value as extreme as 1.46 or more if the null hypothesis (mean=0) were true. Since this is greater than the common threshold of 0.05, we do not reject the null hypothesis.
+For m2 er p-verdien 0.00221, som er mye mindre og indikerer sterke bevis mot nullhypotesen. Dette antyder at det observerte gjennomsnittet (1.5642) er signifikant forskjellig fra 0.
 
-For m2, the p-value is 0.00221, which is much smaller and indicates strong evidence against the null hypothesis. This suggests that the observed mean (1.5642) is significantly different from 0.
+## Oppgave 2:
 
-# Task 2:
+Den primære forskjellen mellom de to modellene er utvalgsstørrelsene:
 
-The primary difference between the two models is the sample size:
+Lite utvalg (m1): Med bare 8 observasjoner er estimatet mindre presist, noe som fører til en høyere standardfeil og lavere t-verdi. Som et resultat forkaster vi ikke nullhypotesen, siden estimatet er for upresist til å kunne fastslå en forskjell fra 0 med sikkerhet.
 
-m1 uses a sample size of 8, which leads to higher variability in the estimate and a higher SE. The result is a relatively small t-value (1.47) and a non-significant p-value (0.185). The small sample size means that random fluctuations have a larger impact, making it harder to detect a true effect.
+Stort utvalg (m2): Med 40 observasjoner er estimatet mer presist, noe som gir lavere standardfeil, høyere t-verdi og lavere p-verdi. Den økte utvalgsstørrelsen gir større statistisk styrke, noe som gjør det lettere å oppdage en signifikant forskjell fra 0. Forskjellen i resultater mellom m1 og m2 skyldes altså forskjellen i utvalgsstørrelse. Det større utvalget gir mer pålitelige estimater og sterkere statistiske bevis.
 
-m2 uses a sample size of 40, which reduces variability in the estimate, leading to a smaller SE and a larger t-value (3.276). The p-value (0.00221) is much smaller, indicating that we have strong evidence to reject the null hypothesis. The larger sample size gives a more accurate and stable estimate of the population mean.
+## Oppgave 3:
 
-Thus, the different results are due to the difference in sample size, with the larger sample providing more reliable estimates and stronger statistical evidence.
+I hypotesetesting bruker vi skyggeområdet i de nedre og øvre halene av t-fordelingen til å beregne p-verdien, som representerer sannsynligheten for å observere en t-verdi like ekstrem som den beregnet fra dataene, gitt at nullhypotesen er sann (gjennomsnitt = 0).
 
-# Task 3:
+For tosidige tester ser vi på avvik fra 0 i begge retninger (positive og negative). Derfor beregner vi arealet under kurven i begge haler av fordelingen.
 
-In hypothesis testing, we use the shaded area in the lower and upper tails of the t-distribution to calculate the p-value, which represents the probability of observing a t-value as extreme as the one calculated from the data, assuming the null hypothesis is true (mean = 0).
+Skyggeområdet tilsvarer andelen t-verdier som er like ekstreme eller mer ekstreme enn den observerte t-verdien. Hvis dette arealet (p-verdi) er lite, konkluderer vi med at slike ekstreme verdier sannsynligvis ikke oppstår tilfeldig, og vi kan kanskje forkaste nullhypotesen.
 
-For two-tailed tests, we are interested in deviations from 0 in both directions (positive and negative). Therefore, we calculate the area under the curve in both tails of the distribution.
+For m1 er skyggeområdet (p-verdi = 0.185) stort, noe som betyr at det er en høy sannsynlighet for å observere en t-verdi like ekstrem som 1.47. Derfor forkaster vi ikke nullhypotesen.
 
-The shaded are corresponds to the proportion of t-values that are as extreme or more extreme than our observed t-value. If this area (p-value) is small, we conclude that such extreme values are unlikely to occur by chance, and we may reject the null hypothesis.
+For m2 er skyggeområdet (p-verdi = 0.00221) lite, så vi forkaster nullhypotesen og konkluderer med at gjennomsnittet er signifikant forskjellig fra 0.
 
-In m1, the shaded area (p-value = 0.185) is large, meaning there is a high chance of observing a t-value as extreme as 1.47, so we don't reject the null hypothesis. In m2, the shaded area (p-value = 0.00221) is small, so we reject the null hypothesis and conclude that the mean is significantly different from 0.
+Ved å bruke både estimater og p-verdier fra m1 og m2 kan vi se hvordan utvalgsstørrelsen påvirker påliteligheten av statistiske slutninger.
 
-By using both estimates and p-values from m1 and m2, we can see how sample size affects the reliability of statistical inference.
-
-# Task 4:
+## Oppgave 4:
 
 ```{r}
 
@@ -133,10 +145,9 @@ print(sd_results)
 
 ```
 
-Explanation of similar numbers The standard deviation of the estimates (sd_estimate) indicates how much the estimates vary around the mean estimate for each sample size. The average standard error (avg_se) provides insight into the variability of the estimate itself. If the standard deviation of the estimates is close to the average standard error, it suggests that the estimates are closely clustered around the mean and that the SE is a reliable estimate of this variability.
+Standardavviket til estimatene (sd_estimate) indikerer hvor mye estimatene varierer rundt gjennomsnittsestimatet for hver utvalgsstørrelse. Gjennomsnittlig standardfeil (avg_se) gir innsikt i variasjonen i selve estimatet. Hvis standardavviket til estimatene er nært gjennomsnittlig standardfeil, antyder det at estimatene er tett samlet rundt gjennomsnittet, og at SE er en pålitelig indikator på denne variasjonen.
 
-# Task 5:
-
+## Oppgave 5:
 
 ```{r}
 
@@ -152,11 +163,11 @@ ggplot(results, aes(x = pval, fill = factor(n))) +
 
 ```
 
-Interpretation
+Tolkning
 
-The histogram allows us to visualize the distribution of p-values for each sample size. A larger sample size generally results in a narrower p-value distribution centered closer to 0, indicating increased power to detect an effect, While smaller sample sizes may lead to a wider distribution with more p-values clustering towards 1.
+Histogrammet lar oss visualisere fordelingen av p-verdier for hver utvalgsstørrelse. Et større utvalg resulterer vanligvis i en smalere p-verdi-fordeling, sentrert nærmere 0, noe som indikerer økt styrke til å påvise en effekt. Mindre utvalg kan derimot føre til en bredere fordeling med flere p-verdier som klynger seg nær 1.
 
-# Task 6:
+## Oppgave 6:
 
 ```{r}
 
@@ -171,7 +182,7 @@ print(significant_results)
 
 ```
 
-# Task 7:
+## Oppgave 7:
 
 ```{r}
 
@@ -193,9 +204,11 @@ print(power_results)
 
 ```
 
-Explanation of results
+Forklaring av resultater
 
-The power of a test indicates the likelihood of correctly rejecting the null hypothesis when it is false. A higher power means a greater chance of detecting an effect if it exists. Typically, larger sample sizes yield greater power, as indicated by the calculated powers for the two sample sizes.
+Styrken til en test indikerer sannsynligheten for korrekt å forkaste nullhypotesen når den faktisk er feil. Høyere styrke betyr større sjanse for å oppdage en effekt dersom den finnes. Typisk gir større utvalgsstørrelser større styrke, noe som er indikert av de beregnede styrkene for de to utvalgsstørrelsene.
+
+## Oppgave 8:
 
 ```{r}
 
@@ -262,8 +275,12 @@ cat("Number of false positives for sample size 40:", false_positives_40, "\n")
 
 ```
 
-# Task 8:
+I hypotesetesting oppstår falske positive når vi feilaktig forkaster nullhypotesen. Ved et signifikansnivå på 0.05 forventer vi at omtrent 5 % av testene gir falske positive dersom nullhypotesen er sann.
 
-Sample Size 8: I found that 50 studies out of 1000 produced a p-value less than 0.05. This means that if you were conducting these studies repeatedly, you would expect around 50 false positives due to random chance alone when your actual population mean is 0.
+Jeg kjørte 1000 simuleringer med utvalgsstørrelser på 8 og 40, med en populasjonsgjennomsnitt på 0 (nullhypotesen). Antall p-verdier mindre enn 0.05 representerer falske positive.
 
-Sample Size 40: For the larger sample size, I found that 45 studies resulted in a p-value less than 0.05. This indicates that with a larger sample size, the number of false positives slightly decreased.
+Utvalgsstørrelse 8: 58 falske positive.
+
+Utvalgsstørrelse 40: 46 falske positive.
+
+Resultatene viser at med et større utvalg reduseres antall falske positive noe, men ikke like mye som forventet. Selv om teorien antyder at større utvalg gir mer nøyaktige estimater og reduserer utvalgsvariasjonen, eliminerer de ikke falske positive helt. Forskjellen i falske positive mellom de to utvalgsstørrelsene (58 mot 46) er liten, men samsvarer fortsatt med den forventede raten for falske positive (rundt 5 %) over tid.

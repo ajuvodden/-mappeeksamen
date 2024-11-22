@@ -1,3 +1,80 @@
-# Molecular Laboratory report
+---
+title: "Labratory report"
+author: "Andrine Juvodden, gruppeoppgave"
+date: "Dato"
+format:
+  html:
+    citation-style: resources/apa.csl.txt
+    code-fold: true
+bibliography: resources/idr-4000-referanser.bib
+output: html_document
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: false
+  warning: false
+  message: false
+---
 
-Select one laboratory assignment and write a detailed report. 
+## Hensikt:
+
+Ekstrahere DNA fra hel-blod og analysere ACTN3 genotypen ved hjelp av PCR og elektroforese-separasjon av DNA-fragmenter.
+
+Hensikten med dette er å undersøke genetiske variasjoner som kan påvirke fysisk prestasjon, spesielt muskelfunksjon. ACT3N-genet koder for et protein kalt alfa-aktinin-3 som er mye uttrykt i type II muskelfibre. Variasjoner i dette genet kan ha betydning for et individs atletiske prestasjon, spesielt aktiviteter som krever eksplosiv styrke eller sprint. Testen brukes ofte innen idrettsforskning for å forstå den genetiske bakgrunnen for atletisk kapasitet, da spesielt innen styrkeøvelser og sprint. Ved å analysere ACTN3-genotypen kan man få en innsikt i hvordan genetiske faktorer påvirker muskelprestasjon og om visse genetiske varianter er assosiert med bedre prestasjon i spesifikke idretter eller øvelser.
+
+## Metode:
+
+P**rotokollen for DNA-ekstraksjon fra fullblod kan beskrives som følgende:**
+
+Blod samles i heparin- eller EDTA-rør og må behandles samme dag hvis det oppbevares ved romtemperatur. Tre milliliter fullblod overføres til et 15 mL rør, og 12 mL av Reagens A tilsettes. Blandingen roteres forsiktig i fire minutter ved romtemperatur. Prøvene fraktes ned fra molekylab til testlab for sentrifugering.
+
+Prøven sentrifugeres deretter ved 3000 g i fem minutter, og supernatanten fjernes forsiktig uten å forstyrre cellepellet. Eventuelle rester av væske fjernes ved blotting eller pipettering. Avvik- 10min + 5 min 1400g Prøvene fraktes opp fra testlab til molekylab for videre behandling. Avvik ca 35 grader i 20 min, + 10 min 70 grader
+
+Cellepelletet resuspenderes i 1 mL Reagens B, før 250 μL 5 M natriumperklorat tilsettes. Røret vendes flere ganger for å blande, og prøven inkuberes i vannbad på 65 °C i 15–20 minutter før den avkjøles til romtemperatur. Avvik Ingrid- tok over løsning i 1,5ml rør- sentrifugerte på nytt hastighet 6 tempratur 21 grader =for å at DNA som er tygst skulle legge seg på bunnen igjen.
+
+Deretter tilsettes 2 mL iskald kloroform, og blandingen roteres i 30–60 minutter. Dette trinnet må utføres i et avtrekksskap, da kloroform er giftig. Etter sentrifugering ved 2400 g i to minutter overføres den øvre vandige fasen, som inneholder DNA, til et nytt rør.
+
+For å felle ut DNA tilsettes 2–3 mL avkjølt 100 % etanol, og røret vendes. Det utfelte DNA-et overføres til et 1,5 mL rør og lufttørkes før det resuspenderes i 200 μL TE-buffer.
+
+Til slutt måles DNA-konsentrasjonen med et spektrofotometer. Forventet utbytte er mellom 200 og 500 ng/μL. 
+
+**Bestemmelse av ACTN3-genotypen involverer følgende trinn:**
+
+DNA ble utvunnet fra prøver, enten fra fullblod eller muskelvev. Master mix og primer mix ble forberedt på forhånd og gjort klart for videre bruk. For hver reaksjon blandes prøven med master mix og primer mix i et PCR-reaksjonsrør for å gjennomføre PCR (polymerasekjedereaksjon).
+
+Resultatene analyseres videre ved hjelp av generell protokoll for agarosegelelektroforese for DNA, hvor prøvene separeres basert på størrelse.
+
+**Generell protokoll for DNA Agarosegelelektroforese**
+
+**Forberedelse av gel**\
+Start med å fortynne 10X TBE-buffer til en 1X-løsning ved å blande 100 ml konsentrert buffer med 900 ml vann. En av gruppene gjennomførte dette trinnet. Deretter tilsettes 100 ml 1X TBE i en konisk kolbe, sammen med agarose for å lage en gel med ønsket konsentrasjon, for eksempel 2 g for en 2 % gel. Dette steget ble utført av oss.
+
+Dersom du bruker Sybr Safe fargestoff, tilsettes det i en konsentrasjon på 1:10 000 (10 µl per 100 ml). Blandingen varmes opp til løsningen blir klar, for eksempel i mikrobølgeovn eller på varmeplate. Vi varmet den opp i omtrent 3 minutter på middels styrke i mikrobølgeovnen. La blandingen avkjøles til rundt 60 grader – den skal kjennes varm, men ikke varm nok til å brenne.
+
+Hell blandingen i en støpeform for gel, og plasser kammen på sin dedikerte plass. Gelen polymeriseres i løpet av én time, og kammen fjernes etterpå.
+
+**Kjøring av gelen**\
+Plasser gelen i elektroforeseapparatet og hell 1X TBE-buffer i tanken slik at brønnene dekkes. Bland prøvene med ladningsfarge, for eksempel 1 µl av 6X farge per 5 µl prøve. I vårt tilfelle brukte vi 2 µl 6X farge per 10 µl prøve.
+
+Tilsett DNA-ladder og prøver i brønnene. Dette steget tok litt tid, og det kan hende en prøve havnet utenfor brønnen. Sett spenningen til 150 V og kjør gelen i omtrent 1 time, eller til fargen har beveget seg rundt 80 % gjennom gelen. Pass på at prøvene beveger seg mot den positive elektroden! Vår kjøring tok 54 minutter.
+
+**Visualisering**\
+Gelen visualiseres i et G:Box-system ved bruk av UV-lys og Sybr green-innstillinger.
+
+## Resultater: 
+
+(Resultatene hadde manglende data, ved at det manglet et bånd. Dette resulterte i at vi ikke klarte å identifisere ACTN3 genotype, hvor genotype R/R produserer to bånd på 690 og 413 bp, mens en X/X genotype produserer to bånd på 690 og 318 bp. Feilkilder kan være en årsak til hvorfor vi ikke fikk ønsket resultat). \
+
+Resultatene til 2 av medlemmene av gruppa viser 318 bp altså X/X , mens 1 viser ingenting og 1 viser 413 bp eller R/R. Simon var den eneste som målte R/R ettersom han hadde 413 bp. Ingrid var den eneste på gruppen som ikke fikk registrert noe resultat, dette kan ha en sammenheng med trinn 5 i protokollen hvor hun hadde et avvik. De forskjellige avvikene som er nevnt kan ha ført til at resultatene ble som de ble.\
+
+## Diskusjon
+
+**Mulige feilkilder:**
+
+Flere faktorer kan ha bidratt til feil eller uventede resultater under DNA-ekstraksjonen og analysen. Effektiv lysering av cellene er avgjørende for å frigjøre DNA, og dersom lysereagensene ikke ble tilsatt korrekt, eller inkubasjonstiden var for kort, kan det ha resultert i ufullstendig lysering og lavt DNA-utbytte. I tillegg kan DNA ha blitt degradert under ekstraksjonsprosessen, spesielt ved overdreven vortexing eller eksponering for høye temperaturer, noe som kan skade DNA-strengene.
+
+Videre kan problemer ha oppstått under etanolutfellingen, som feil mengde etanol, upassende saltbuffer eller utilstrekkelig sentrifugering. Disse feilene kan forhindre korrekt utfelling av DNA. Under påvisningsprosessen, for eksempel ved bruk av gelelektroforese, kan feil i teknikken ha skjedd, som feil mengde DNA i brønnene, feil gelkonsentrasjon eller problemer med fargestoffet som brukes for visualisering. Dersom DNA er tilstede, men bare ett bånd er synlig i stedet for to eller tre som forventet, kan dette skyldes spesifikke problemer med DNA-ekstraksjonen eller analysen.
+
+Ulike trinn i analysen kan ha bidratt til avvikene. Ineffektiv enzymatisk behandling, for eksempel lav aktivitet av restriksjonsenzymer, kan resultere i ukuttet DNA som kun viser ett bånd. Problemer under PCR-amplifikasjon, som suboptimale betingelser eller manglende spesifisitet i primerbindingen, kan også føre til at kun deler av DNA blir forsterket. Feil under gelelektroforese, som feil konsentrasjon av gelen eller utilstrekkelig separasjon av fragmenter, kan også påvirke resultatene.
+
+Til slutt kan kontaminasjon eller feil pipettering føre til unøyaktige resultater. Dette kan forklare hvorfor bare ett bånd er synlig, selv om flere var forventet. Disse mulige feilene understreker viktigheten av nøye håndtering gjennom hele prosessen for å sikre pålitelige resultater.

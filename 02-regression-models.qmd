@@ -1,8 +1,273 @@
-# Assignment 2: Regression models, predicting from data  {#assignment2}
+---
+title: "Regression Models"
+author: "Andrine Juvodden, gruppeoppgave"
+format:
+  html:
+    citation-style: resources/apa.csl.txt
+    code-fold: true
+bibliography: resources/idr-4000-referanser.bib
+output: html_document
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Introduksjon
+
+Denne oppgaven er delt inn i tre deler, som hver fokuserer på ulike konsepter innen dataanalyse og regresjon. I del 1 beregner vi laktatterskler og undersøker reliabiliteten mellom to ulike terskelnivåer. I del 2 benytter vi molekylære data for å forutsi størrelsen på DNA-fragmenter. Til slutt, i del 3, undersøker vi om det er en lineær sammenheng mellom valgte variabler fra datasettet hypertrophy i datapakken exscidata.
+
+## Del 1: Laktatterskler
+
+### Introduksjon
+
+Laktatterskel er en vitkig variabel for å predikere prestasjoner i utholdenhetsidretter, og brukes både til å justere treningsintenistet og evaluere effekten av trening (@Machado2012). Det finnes flere metoder for å bestemme en utøvers laktatterskel, og ifølge @Machado2012 er "maximal-deviation method" (Dmax), som ble anbefalt av Cheng et al. i 1992, en av de mest pålitelige. Denne metoden er spesielt nyttig for å vurdere mekanismene som påvirker prestasjon i langdistanseidretter, og har vist seg å ha en sterkere korrelasjon med både prestasjon og laktatterskel sammenlignet med andre metoder. De representative tersklene som blir undersøkt er (). Dette kan oppnås ved å bruke en regresjonsmodell for å beskrive forholdet, og deretter utføre en "invers prediksjon" av treningsintensiteten @Tanner2012.
+
+### Metode
+
+Som vi kan se i den plotta grafen under, er de forskjellige grafene ikke så forskjellige rundt 2mmol og 4mmol L\~-1. På den andre siden ser vi at den lineære modellen er feil ved 300w, den sekundærplynomiske modellen er feil ved 275w. Den tredje- og fjerdeplynomiske modellen derimot, varierer ikke mye fra hverandre.
+
+```{r}
+
+library(tidyr)
+library(tidyverse)
+library(ggplot2)
+library(exscidata)
+library(knitr)
+
+data("cyclingstudy")
+
+cyclingstudy %>%
+  select(subject, group, timepoint, lac.225:lac.375) %>%
+  filter(timepoint == "pre", subject == 10) %>%
+  pivot_longer(
+    cols = lac.225:lac.375,
+    names_to = "watt",
+    values_to = "lactate",
+    names_prefix = "lac.",
+    names_transform = list(watt = as.numeric)
+  ) %>%
+
+    ggplot(aes(x = watt, y = lactate, group = subject)) +
+  geom_line(linetype = 2) + 
+  geom_point(shape = 21, fill = "lightblue", size = 2.5) +  
+  
+  geom_hline(yintercept = 4, color = "red") +
+  geom_hline(yintercept = 2, color = "gold") +
+  
+  geom_vline(xintercept = 341.5, color = "blue") +
+  geom_vline(xintercept = 308, color = "green") +
+  
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ x, color = "#e41a1c") +
+  
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 2), color = "#377eb8") +
+  
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 3), color = "#4daf4a") +
+  
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, 4), color = "#ff7f00")
 
 
-The assignment has three parts:
+```
 
-- Part 1: Lactate thresholds
-- Part 2: Predicting sizes of DNA fragments
-- Part 3: Interpreting a regression table
+For å finne ut hva forutsatt wattverdi som er nærmest 2 og 4 mmol L-1, benytter vi koden under:
+
+```{r}
+
+library(tidyr)
+library(tidyverse)
+library(ggplot2)
+library(exscidata)
+library(knitr)
+
+data("cyclingstudy")
+
+# Filter data
+cycling_filtered <- cyclingstudy %>%
+  select(subject, group, timepoint, lac.225:lac.375) %>%
+  filter(timepoint == "pre", subject == 10) %>%
+  pivot_longer(
+    cols = lac.225:lac.375,
+    names_to = "watt",
+    values_to = "lactate",
+    names_prefix = "lac.",
+    names_transform = list(watt = as.numeric)
+  )
+
+# Tilpass en polynommodell av 3. grad
+m3 <- lm(lactate ~ poly(watt, 3), data = cycling_filtered)
+
+# Ny dataramme for prediksjoner
+ndf <- data.frame(watt = seq(from = 225, to = 375, by = 0.1))
+ndf$predictions <- predict(m3, newdata = ndf)
+
+# Finn wattverdiene nærmest 2 mmol/L og 4 mmol/L
+lactate_threshold_2 <- ndf %>%
+  filter(abs(predictions - 2) == min(abs(predictions - 2)))
+
+lactate_threshold_4 <- ndf %>%
+  filter(abs(predictions - 4) == min(abs(predictions - 4)))
+
+# Resultater
+print(lactate_threshold_2)
+print(lactate_threshold_4)
+
+# Plot data and the model
+ggplot(cycling_filtered, aes(x = watt, y = lactate)) +
+  geom_point(shape = 21, fill = "lightblue", size = 2.5) +  # Plot the data points
+  geom_line(color = "black", linetype = "dashed") +  # Add the line for the model
+  geom_hline(yintercept = c(2, 4), color = c("gold", "red"), linetype = "dotted") +  # Add horizontal lines for 2 and 4 mmol/L
+  geom_vline(xintercept = lactate_threshold_2$watt, color = "green", linetype = "solid") +  # Vertical line for 2 mmol/L
+  geom_vline(xintercept = lactate_threshold_4$watt, color = "blue", linetype = "solid") +  # Vertical line for 4 mmol/L
+  theme_minimal() +
+  labs(title = "Laktatnivå versus Watt", x = "Watt", y = "Laktatnivå")
+
+```
+
+Regresjonsanalysen viser at wattverdien som gir et laktatnivå på 2 mmol L-1 er omtrent 311 watt. Når intensiteten når 311 watt, forventes laktatnivået å være nær 2 mmol L-1. laktatnivået på 4 mmol L-1, ligger predikerte wattverdien på 343 watt. Disse resultatene kan brukes til å vurdere intenisten på treningsøktene i forhold til laktatterskelene.
+
+For å sammenligne reliabiliten (SD som en prosent av gjennomsnittet) mellom lac.225 og lac.375, kan vi formulere koden slik:
+
+```{r, results='hide'}
+
+# Filtrer ut NA-verdier for lac.225 og lac.375
+lac_data_225 <- cyclingstudy %>%
+  filter(!is.na(lac.225)) %>%
+  select(subject, lac.225)
+
+lac_data_375 <- cyclingstudy %>%
+  filter(!is.na(lac.375)) %>%
+  select(subject, lac.375)
+
+# Sjekk antall rader i dataene for lac.225 og lac.375
+cat("Antall rader i lac_data_225:", nrow(lac_data_225), "\n")
+cat("Antall rader i lac_data_375:", nrow(lac_data_375), "\n")
+
+# Beregn standardfeil, gjennomsnitt og prosentandel for lac.225
+se_lac225 <- sd(lac_data_225$lac.225) / sqrt(length(lac_data_225$lac.225))
+mean_lac225 <- mean(lac_data_225$lac.225)
+perc_se_lac225 <- (se_lac225 / mean_lac225) * 100
+
+# Beregn standardfeil, gjennomsnitt og prosentandel for lac.375
+se_lac375 <- sd(lac_data_375$lac.375) / sqrt(length(lac_data_375$lac.375))
+mean_lac375 <- mean(lac_data_375$lac.375)
+perc_se_lac375 <- (se_lac375 / mean_lac375) * 100
+
+# Skriv ut resultatene
+cat("Typisk feil som prosentandel for lac.225:", perc_se_lac225, "%\n")
+cat("Typisk feil som prosentandel for lac.375:", perc_se_lac375, "%\n")
+
+
+```
+
+Resultatene viser at den typiske feilen som prosentandel av gjennomsnittet er 5.95% for lac.225 og 2.26% for lac.375. Dette betyr at for lac.225 er det en betydelig større variasjon i dataene sammenlignet med lac. 375, som har lavere SD. Samtidig indkikerer begge resultatene at det er en viss usikkerhet i målingene.
+
+## Del 2: Predikere størrelse på DNA-fragmenter
+
+### Introduksjon
+
+I denne delen av oppgaven ser vi nærmere på forsøket vi gjennomførte på molekylærlabben, hvor vi ekstraherte DNA fra blodprøver. Her ønsket vi å isolere gener relatert til hurtig (R/R) og langsom (X/X) muskelfibre ved hjelp av en PCR maskin. Deretter ble prøvene analysert gjennom elektroforese i agarosegel, sammen med en DNA-ladder som fungerer som markør for å kartlegge genene. DNA-ladderen markerer hvert tiende basepar (bp) opp til 300bp og hvert hundrede basepar videre til 1000bp. De dominante R/R-genene har størrelse på 413bp, mens X/X-genene har en størrelse på 318bp. PÅ grunn av forskjellen i størrelse, vil de mindre X/X-genene trekke lenger inn i gelen under selve elektroforesen. Dette er imidlertid vanskelig å vurdere nøyaktig med bare øynene. For å få mer pålitelig resultat, har vi benyttet en metode for å analysere prøvene for mer presise målinger.
+
+### Metode
+
+"For å analysere DNA-prøvene, brukte vi ImageJ til å behandle bildene som ble tatt etter elekroforesen. Først inverterte vi bildene for å forbedre kontrasten, der etter justerte vi dem slik at de var riktig justert, og klippet ut den relevante delen av bildet for videre analyse. Videre markerte vi stigen og prøvene vi ønsket å analysere, og ut fra de markerte områdene lagde vi grafer for hver brønn. "
+
+For å analysere DNA-fragmentene målte vi migrasjonsavtandene i gelen ved hjelp av ImageJ. Vi markerte toppunktene i grafene som representerer både genene i prøvene og trinnene i DNA-ladderen. ImageJ registrerte nøyaktig plassering av disse punktene, og koordiantene ble flyttet til et Excel-ark for videre beregning i R. Her brutke vi den kjente DNA-ladderen til å lage en standardkurve ved å relatere migrasjonsavstanden til størrelsen på fragmentene i bp. Tilslutt benyttet vi en lineær regresjonsmodell for å estimere størrelsen på DNA-fragmentene i våre ukjente prøver.
+
+### Målinger
+
+```{r}
+
+library(readxl)
+dat <- read_excel("data/resultat_dna_analyse.xlsx")
+
+```
+
+Vi starter med å kalibrere DNA-stigen for å bestemme molekylstørrelsen på de ukjente prøvene. Dette kan vi gjøre ved å lage en data.frame kalt "ladder", der vi bruker verdiene som er omvendt proposjonale, ettersom små molekyler beveger seg lengre i gelen. Deretter kan vi lage en annen data.frame for de ukjente prøvene, som vi kaller "unknown", for videre analyse.
+
+```{r}
+
+ladder <- data.frame(
+  dist = c(36, 59.5, 86.5, 119.5, 159.5, 208.5, 269.5, 351.5, 396.5, 455.5, 521.5, 599.5, 701.5),
+  mw = c(1000, 900, 800, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50)
+)
+
+unknown <- data.frame(
+  dist = c(258.5, 262.5, 265.5, 335.5)
+)
+
+```
+
+For å lage en kalibreringsmodell bruker vi dataene fra stigen til å lage en ggplot som visualiserer stigens forhold. Deretter bruker vi denne grafen til å estimere størrelsen på de ukjente prøvene. Vi benytter en polynomfunksjon (poly) for å tilpasse en kurve som gir minst mulig avvik fra datane.
+
+```{r}
+
+library(tidyverse)
+
+data <- data.frame(
+  x = c(36, 59.5, 86.5, 119.5, 159.5, 208.5, 269.5, 351.5, 396.5, 455.5, 521.5, 599.5, 701.5),
+  y = c(1000, 900, 800, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50)
+)
+
+ggplot(data = data, aes(x, y)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), color = "green", se = FALSE) +
+  scale_y_continuous(limits = c(0, 1000)) + 
+  scale_x_continuous(limits = c(0, 750)) +
+  labs(x = "Avstand (mm)", y = "Molekylvekt (Da)", title = "Kalibreringsmodell")
+
+
+```
+
+Videre kan vi bruke vi følgende koder for å estimere molekylstørrelsen på genene i prøven vår.
+
+```{r, results='hide'}
+
+cal <- lm(log(mw) ~ dist, data = ladder)
+
+summary(cal)
+
+preds <- exp(predict(cal, newdata = unknown))
+
+unknown$predicted_mw <- preds
+
+
+```
+
+Resultatene viser at kalibreringsmodellen har høy prediktiv nøyaktighet, med et R-squared på 0.9895, som tilsier at modellen forklarer nesten 99% av variasjonen i molekylvektene basert på migrasjonsavstanden.
+
+Til slutt, brukte vi følgende koder for å estimere molekylstørrelsen på genene i prøven vår:
+
+```{r, results='hide'}
+
+ladder <- data.frame(
+  dist = c(36, 59.5, 86.5, 119.5, 159.5, 208.5, 269.5, 351.5, 396.5, 455.5, 521.5, 599.5, 701.5),
+  mw = c(1000, 900, 800, 700, 600, 500, 400, 300, 250, 200, 150, 100, 50)
+)
+
+cal <- lm(log(mw) ~ dist, data = ladder)
+
+summary(cal)
+
+unknown <- data.frame(dist = c(258.5, 262.5, 265.5, 335.5))
+
+preds <- exp(predict(cal, newdata = unknown))
+
+preds
+
+
+```
+
+Resultatene viser de estimerte molekylvektene (bp) for de ukjente DNA-fragmentene basert på deres migrasjonsavstand i gelen. Noe som gav oss følgende størrelser:
+
+-   Prøve 1: 407.5 bp
+-   Prøve 2: 400.7 bp
+-   prøve 3: 395.7 bp
+-   prøve 4: 295.2 bp
+
+## Diskusjon
+
+Resultatene fra kalibreringsmodellen viste høy nøyaktighet med en R-squared på 0.9895, noe som tyder at vi kan stole på de estimerte molekylvektene for de ukjente prøvene. Ser vi på de estimerte molekylvektene (407.5, 400.7, 395.7 bp og 295.2 bp) stemmer godt overens med de kjente størrelsene for R/R-genet (413) og X/X-genet (318 bp). De fleste prøvene er nær 400 bp, som indikerer at de inneholder R/R-genene, mens den lavere verdien (295.2 bp) kan tilhøre X/X-genet.
+
+Noen faktorer som kan påvirke resultatene er bildekvalitet og variasjon i elektroforesen, som kan føre til små avvik i migrasjonsavstandene. Likevel, de estimerte størrelsene er konsistente med forventningene, og metoden gir en pålitelig tilnærming for å bestemme molekylvektene i DNA-prøvene våre.
